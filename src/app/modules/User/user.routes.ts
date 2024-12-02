@@ -15,4 +15,14 @@ router.post(
   }
 );
 
+// create customer
+router.post(
+  "/create-customer",
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createCustomer.parse(JSON.parse(req.body.data));
+    return UserController.createCustomer(req, res, next);
+  }
+);
+
 export const UserRoutes = router;
