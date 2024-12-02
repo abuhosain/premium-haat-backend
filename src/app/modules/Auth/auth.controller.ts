@@ -1,6 +1,10 @@
+import { UserStatus } from "@prisma/client";
 import catchAsynch from "../../../shared/catchAsynch";
+import { prisma } from "../../../shared/prisma";
 import sendResponse from "../../../shared/sendResponse";
 import { AuthServices } from "./auth.services";
+import * as bcrypt from "bcrypt";
+import { Request, Response } from "express";
 
 const loginUser = catchAsynch(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
@@ -21,6 +25,7 @@ const loginUser = catchAsynch(async (req, res) => {
   });
 });
 
+// refresh token
 const refreshToken = catchAsynch(async (req, res) => {
   const { refreshToken } = req.cookies;
   const result = await AuthServices.refreshToken(refreshToken);
@@ -32,7 +37,21 @@ const refreshToken = catchAsynch(async (req, res) => {
   });
 });
 
+// change password
+const changePassword = catchAsynch(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await AuthServices.changePassword(req.user, req.body);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "password change successfully",
+      data: result,
+    });
+  }
+);
+
 export const AuthControllers = {
   loginUser,
   refreshToken,
+  changePassword,
 };
