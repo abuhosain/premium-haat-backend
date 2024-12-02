@@ -1,9 +1,8 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
-// import router from "./app/routes";
-
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import router from "./app/routes";
 const app: Application = express();
 
 // midleware
@@ -20,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// app.use("/api/v1", router);
+app.use("/api/v1", router);
 
 // error handler
 app.use(globalErrorHandler);
