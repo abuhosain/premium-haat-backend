@@ -5,6 +5,8 @@ import { JwtHelpers } from "../../helpers/jwtHelpers";
 import config from "../../config";
 import { Secret } from "jsonwebtoken";
 import emailSender from "../../../shared/emailSender";
+import ApiError from "../../errors/ApiError";
+import httpStatus from "http-status";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -139,9 +141,43 @@ const forgotPassword = async (payload: { email: string }) => {
   );
 };
 
+// reset password
+const resetPassword = async (
+  token: string,
+  payload: { email: string; password: string }
+) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const isValidToken = JwtHelpers.verifyToken(
+    token,
+    config.jwt.reset_pass_token as Secret
+  );
+  // console.log(isValidToken);
+  if (!isValidToken) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden");
+  }
+
+  const hashedPassword: string = await bcrypt.hash(payload.password, 12);
+
+  await prisma.user.update({
+    where: {
+      email: userData.email,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+};
+
 export const AuthServices = {
   loginUser,
   refreshToken,
   changePassword,
   forgotPassword,
+  resetPassword,
 };
