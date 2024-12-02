@@ -3,7 +3,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { UserServices } from "./user.services";
 
 const createAdmin = catchAsynch(async (req, res) => {
-  const result = await UserServices.createAdmin();
+  const result = await UserServices.createAdmin(req);
   sendResponse(res, {
     statusCode: 200,
     success: true,
