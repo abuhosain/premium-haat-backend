@@ -1,4 +1,4 @@
-import { Profile, UserRole } from "@prisma/client";
+import { Profile, UserRole, Vendor } from "@prisma/client";
 import { Request } from "express";
 import { fileUploader } from "../../helpers/fileUploader";
 import { IFile } from "../../interfaces/file";
@@ -9,7 +9,7 @@ const createAdmin = async (req: Request): Promise<Profile> => {
   const file = req.file as IFile;
   if (file) {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    console.log(uploadToCloudinary);
+    // console.log(uploadToCloudinary);
     req.body.admin.img = uploadToCloudinary?.secure_url;
   }
 
@@ -40,7 +40,7 @@ const createCustomer = async (req: Request): Promise<Profile> => {
   const file = req.file as IFile;
   if (file) {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    console.log(uploadToCloudinary);
+    // console.log(uploadToCloudinary);
     req.body.customer.img = uploadToCloudinary?.secure_url;
   }
 
@@ -67,7 +67,40 @@ const createCustomer = async (req: Request): Promise<Profile> => {
   return result;
 };
 
+const createVendor = async (req: Request): Promise<Vendor> => {
+  const file = req.file as IFile;
+  if (file) {
+    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+    console.log(uploadToCloudinary);
+    req.body.vendor.logo = uploadToCloudinary?.secure_url;
+  }
+  // console.log(req.body.vendor);
+
+  const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
+  // console.log(hashedPassword);
+  const userData = {
+    email: req.body.vendor.email,
+    password: hashedPassword,
+    role: UserRole.VENDOR,
+  };
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: userData,
+    });
+
+    const createVendorData = await transactionClient.vendor.create({
+      data: req.body.vendor,
+    });
+
+    return createVendorData;
+  });
+
+  return result;
+};
+
 export const UserServices = {
   createAdmin,
   createCustomer,
+  createVendor,
 };
