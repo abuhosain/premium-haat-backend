@@ -4,4 +4,7 @@ const router = express.Router();
 
 router.post("/login", AuthControllers.loginUser);
 
+// refresh token
+router.post("/refresh-token", AuthControllers.refreshToken);
+
 export const AuthRoutes = router;

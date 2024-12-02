@@ -40,6 +40,37 @@ const loginUser = async (payload: { email: string; password: string }) => {
   };
 };
 
+const refreshToken = async (token: string) => {
+  let decodeToken;
+  try {
+    decodeToken = JwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_token as Secret
+    );
+    // console.log(decodeToken);
+  } catch (err) {
+    throw new Error("You are not authorized");
+  }
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: decodeToken?.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const accessToken = JwtHelpers.generateToken(
+    { email: userData.email, role: userData.role },
+    "abcdefg",
+    "5m"
+  );
+
+  return {
+    accessToken,
+  };
+};
+
 export const AuthServices = {
   loginUser,
+  refreshToken,
 };
