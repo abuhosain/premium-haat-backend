@@ -12,3 +12,55 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       String     @id @default(uuid())
+  email    String     @unique
+  password String
+  role     UserRole
+  status   UserStatus @default(ACTIVE)
+  vendor   Vendor?
+  profile  Profile?
+
+  @@map("users")
+}
+
+model Vendor {
+  id          String  @id @default(uuid())
+  email       String  @unique
+  name        String
+  phone       String
+  logo        String
+  description String
+  isBlocked   Boolean @default(false)
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("vendors")
+}
+
+model Profile {
+  id        String  @id @default(uuid())
+  email     String  @unique
+  firstName String
+  lastName  String
+  phone     String
+  address   String
+  img       String
+  isDeleted Boolean @default(false)
+  user      User    @relation(fields: [email], references: [email])
+
+  @@map("profiles ")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  VENDOR
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+}
