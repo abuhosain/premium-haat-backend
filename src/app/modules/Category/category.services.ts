@@ -27,6 +27,23 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
   });
 };
 
+const updateCategory = async (
+  id: string,
+  req: Request
+): Promise<Category | null> => {
+  const file = req.file as IFile;
+  if (file) {
+    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+    req.body.icon = uploadToCloudinary?.secure_url;
+  }
+
+  const result = await prisma.category.update({
+    where: { id },
+    data: req.body,
+  });
+  return result;
+};
+
 const deleteCategoryFromDB = async (id: string): Promise<Category | null> => {
   return await prisma.category.delete({
     where: { id },
@@ -37,5 +54,6 @@ export const CategoryServices = {
   createCategory,
   getAllCategoryFromDB,
   getCategoryById,
+  updateCategory,
   deleteCategoryFromDB,
 };

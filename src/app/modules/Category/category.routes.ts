@@ -22,6 +22,22 @@ router.post(
 router.get("/", CategoryControllers.getAllCategoryFromDB);
 // get category by id
 router.get("/:id", CategoryControllers.getCategoryById);
+
+// Update category
+router.put(
+  "/:id",
+  fileUploader.upload.single("file"),
+  auth(UserRole.ADMIN),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = CategoryValidation.updateCategory.parse(
+        JSON.parse(req.body.data)
+      );
+    }
+    return CategoryControllers.updateCategory(req, res, next);
+  }
+);
+
 // delete category
 router.delete("/:id", CategoryControllers.deleteCategory);
 
