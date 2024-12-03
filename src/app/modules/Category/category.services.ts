@@ -14,13 +14,21 @@ const createCategory = async (req: Request) => {
   const result = await prisma.category.create({
     data: req.body,
   });
+  return result;
 };
 
 const getAllCategoryFromDB = async (): Promise<Category[]> => {
   return await prisma.category.findMany();
 };
 
+const getCategoryById = async (id: string): Promise<Category | null> => {
+  return await prisma.category.findUnique({
+    where: { id },
+  });
+};
+
 export const CategoryServices = {
   createCategory,
   getAllCategoryFromDB,
+  getCategoryById,
 };

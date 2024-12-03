@@ -18,7 +18,9 @@ router.post(
     return CategoryControllers.createCategory(req, res, next);
   }
 );
-
+// get all category
 router.get("/", CategoryControllers.getAllCategoryFromDB);
+// get category by id
+router.get("/:id", CategoryControllers.getCategoryById);
 
 export const CategoryRoutes = router;
