@@ -10,6 +10,7 @@ const router = express.Router();
 router.post(
   "/create-category",
   fileUploader.upload.single("file"),
+  auth(UserRole.ADMIN),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = CategoryValidation.createCategory.parse(
       JSON.parse(req.body.data)
@@ -17,5 +18,7 @@ router.post(
     return CategoryControllers.createCategory(req, res, next);
   }
 );
+
+router.get("/", CategoryControllers.getAllCategoryFromDB);
 
 export const CategoryRoutes = router;
