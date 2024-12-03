@@ -27,8 +27,15 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
   });
 };
 
+const deleteCategoryFromDB = async (id: string): Promise<Category | null> => {
+  return await prisma.category.delete({
+    where: { id },
+  });
+};
+
 export const CategoryServices = {
   createCategory,
   getAllCategoryFromDB,
   getCategoryById,
+  deleteCategoryFromDB,
 };

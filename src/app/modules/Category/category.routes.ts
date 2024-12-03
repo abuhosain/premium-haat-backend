@@ -22,5 +22,7 @@ router.post(
 router.get("/", CategoryControllers.getAllCategoryFromDB);
 // get category by id
 router.get("/:id", CategoryControllers.getCategoryById);
+// delete category
+router.delete("/:id", CategoryControllers.deleteCategory);
 
 export const CategoryRoutes = router;
