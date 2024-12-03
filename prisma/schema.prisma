@@ -34,7 +34,8 @@ model Vendor {
   description String
   isBlocked   Boolean @default(false)
 
-  user User @relation(fields: [email], references: [email])
+  user    User      @relation(fields: [email], references: [email])
+  product Product[]
 
   @@map("vendors")
 }
@@ -51,6 +52,46 @@ model Profile {
   user      User    @relation(fields: [email], references: [email])
 
   @@map("profiles ")
+}
+
+model Category {
+  id      String    @id @default(uuid())
+  name    String
+  icon    String
+  product Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  vendorId    String
+  title       String
+  img         String
+  description String
+  price       Float
+  categoryId  String
+  quantity    String
+  discount    Float
+  couponId    String? @default(uuid())
+
+  // Relation
+  category Category @relation(fields: [categoryId], references: [id])
+  vendor   Vendor   @relation(fields: [vendorId], references: [id])
+  coupon   Coupon?  @relation(fields: [couponId], references: [id])
+
+  @@map("products")
+}
+
+model Coupon {
+  id         String    @id @default(uuid())
+  code       String    @unique
+  percentage Float
+  expiryDate DateTime
+  productId  String?
+  Product    Product[]
+
+  @@map("coupons")
 }
 
 enum UserRole {
