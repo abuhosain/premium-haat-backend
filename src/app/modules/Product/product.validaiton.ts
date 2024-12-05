@@ -13,6 +13,17 @@ const createProduct = z.object({
   couponId: z.string().optional(),
 });
 
+const updateProduct = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  price: z.number().positive("Price must be a positive number").optional(),
+  categoryId: z.string().optional(),
+  quantity: z.number().optional(),
+  discount: z.number().optional(),
+  couponId: z.string().optional(),
+});
+
 export const ProductValidation = {
   createProduct,
+  updateProduct,
 };

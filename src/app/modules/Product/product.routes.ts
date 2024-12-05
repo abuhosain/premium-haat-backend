@@ -23,4 +23,19 @@ router.get("/", ProductControllers.getAllProduct);
 // get product by id
 router.get("/:id", ProductControllers.getProductById);
 
+// Update product
+router.put(
+  "/:id",
+  fileUploader.upload.single("file"),
+  auth(UserRole.VENDOR),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = ProductValidation.updateProduct.parse(
+        JSON.parse(req.body.data)
+      );
+    }
+    return ProductControllers.updateProduct(req, res, next);
+  }
+);
+
 export const ProductRoutes = router;

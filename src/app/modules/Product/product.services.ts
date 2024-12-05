@@ -27,8 +27,26 @@ const getProductById = async (id: string): Promise<Product | null> => {
   });
 };
 
+const updateProduct = async (
+  id: string,
+  req: Request
+): Promise<Product | null> => {
+  const file = req.file as IFile;
+  if (file) {
+    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+    req.body.img = uploadToCloudinary?.secure_url;
+  }
+
+  const result = await prisma.product.update({
+    where: { id },
+    data: req.body,
+  });
+  return result;
+};
+
 export const ProductServices = {
   createProduct,
   getAllProductFromDb,
   getProductById,
+  updateProduct,
 };
