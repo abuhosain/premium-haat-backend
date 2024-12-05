@@ -18,7 +18,19 @@ const getCouponByCode = async (code: string) => {
   return coupons;
 };
 
+// Update Coupon by ID
+const updateCoupon = async (id: string, payload: Partial<Coupon>) => {
+  const updatedCoupon = await prisma.coupon.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return updatedCoupon;
+};
+
 export const CouponServices = {
   createCoupon,
   getCouponByCode,
+  updateCoupon,
 };

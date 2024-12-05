@@ -15,4 +15,12 @@ router.post(
 // get coupon by code
 router.get("/:id", CouponControllers.getCouponByCode);
 
+// update coupon
+router.put(
+  "/:id",
+  auth(UserRole.VENDOR),
+  validateRequest(CouponValidation.updateCoupon),
+  CouponControllers.updateCoupon
+);
+
 export const CouponRoutes = router;
