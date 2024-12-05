@@ -29,8 +29,19 @@ const updateCoupon = async (id: string, payload: Partial<Coupon>) => {
   return updatedCoupon;
 };
 
+// Delete Coupon by ID
+const deleteCoupon = async (id: string) => {
+  const deletedCoupon = await prisma.coupon.delete({
+    where: {
+      id,
+    },
+  });
+  return deletedCoupon;
+};
+
 export const CouponServices = {
   createCoupon,
   getCouponByCode,
   updateCoupon,
+  deleteCoupon,
 };

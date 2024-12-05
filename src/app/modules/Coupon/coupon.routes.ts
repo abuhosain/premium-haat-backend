@@ -23,4 +23,7 @@ router.put(
   CouponControllers.updateCoupon
 );
 
+// delete coupon
+router.delete("/:id", CouponControllers.deleteCoupon);
+
 export const CouponRoutes = router;
