@@ -38,4 +38,7 @@ router.put(
   }
 );
 
+// delete product
+router.delete("/:id", ProductControllers.deleteProduct);
+
 export const ProductRoutes = router;

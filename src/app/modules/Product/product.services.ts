@@ -44,9 +44,16 @@ const updateProduct = async (
   return result;
 };
 
+const deleteProductFromDB = async (id: string): Promise<Product | null> => {
+  return await prisma.product.delete({
+    where: { id },
+  });
+};
+
 export const ProductServices = {
   createProduct,
   getAllProductFromDb,
   getProductById,
   updateProduct,
+  deleteProductFromDB,
 };
