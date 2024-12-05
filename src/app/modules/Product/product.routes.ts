@@ -16,7 +16,11 @@ router.post(
     return ProductControllers.createProduct(req, res, next);
   }
 );
-// get all category
+
+// get all product
 router.get("/", ProductControllers.getAllProduct);
+
+// get product by id
+router.get("/:id", ProductControllers.getProductById);
 
 export const ProductRoutes = router;

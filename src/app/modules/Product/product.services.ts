@@ -21,7 +21,14 @@ const getAllProductFromDb = async (): Promise<Product[]> => {
   return await prisma.product.findMany();
 };
 
+const getProductById = async (id: string): Promise<Product | null> => {
+  return await prisma.product.findUnique({
+    where: { id },
+  });
+};
+
 export const ProductServices = {
   createProduct,
   getAllProductFromDb,
+  getProductById,
 };
