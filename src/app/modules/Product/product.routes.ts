@@ -16,5 +16,7 @@ router.post(
     return ProductControllers.createProduct(req, res, next);
   }
 );
+// get all category
+router.get("/", ProductControllers.getAllProduct);
 
 export const ProductRoutes = router;

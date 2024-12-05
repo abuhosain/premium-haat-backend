@@ -2,6 +2,7 @@ import { Request } from "express";
 import { fileUploader } from "../../helpers/fileUploader";
 import { IFile } from "../../interfaces/file";
 import { prisma } from "../../../shared/prisma";
+import { Product } from "@prisma/client";
 
 const createProduct = async (req: Request) => {
   const file = req.file as IFile;
@@ -16,6 +17,11 @@ const createProduct = async (req: Request) => {
   return result;
 };
 
+const getAllProductFromDb = async (): Promise<Product[]> => {
+  return await prisma.product.findMany();
+};
+
 export const ProductServices = {
   createProduct,
+  getAllProductFromDb,
 };
