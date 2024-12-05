@@ -26,7 +26,7 @@ const uploadToCloudinary = async (
   file: IFile
 ): Promise<ICloudinaryResponse | undefined> => {
   // Upload an image
-  console.log(file);
+  // console.log(file);
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file.path,

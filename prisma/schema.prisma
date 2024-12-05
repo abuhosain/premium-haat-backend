@@ -71,9 +71,9 @@ model Product {
   description String
   price       Float
   categoryId  String
-  quantity    String
+  quantity    Int
   discount    Float
-  couponId    String? @default(uuid())
+  couponId    String?
 
   // Relation
   category Category @relation(fields: [categoryId], references: [id])
