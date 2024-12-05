@@ -8,6 +8,17 @@ const createCoupon = async (payload: Coupon) => {
   return result;
 };
 
+// Get All Coupons by Code
+const getCouponByCode = async (code: string) => {
+  const coupons = await prisma.coupon.findMany({
+    where: {
+      code,
+    },
+  });
+  return coupons;
+};
+
 export const CouponServices = {
   createCoupon,
+  getCouponByCode,
 };

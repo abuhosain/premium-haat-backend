@@ -12,5 +12,7 @@ router.post(
   validateRequest(CouponValidation.createCoupon),
   CouponControllers.createCoupon
 );
+// get coupon by code
+router.get("/:id", CouponControllers.getCouponByCode);
 
 export const CouponRoutes = router;
