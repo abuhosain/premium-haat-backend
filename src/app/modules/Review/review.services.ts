@@ -137,6 +137,20 @@ const updateVendorResponse = async (
   });
 };
 
+const deleteVendorResponse = async (responseId: string) => {
+  const response = await prisma.response.findUnique({
+    where: { id: responseId },
+  });
+
+  if (!response) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Vendor response not found");
+  }
+
+  return await prisma.response.delete({
+    where: { id: responseId },
+  });
+};
+
 export const ReviewServices = {
   createReview,
   getReviewByProductId,
@@ -144,4 +158,5 @@ export const ReviewServices = {
   deleteReview,
   createVendorResponse,
   updateVendorResponse,
+  deleteVendorResponse,
 };

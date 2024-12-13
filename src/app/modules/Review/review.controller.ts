@@ -93,6 +93,16 @@ const updateVendorResponse = catchAsynch(async (req: any, res) => {
   });
 });
 
+const deleteVendorResponse = catchAsynch(async (req, res) => {
+  const { responseId } = req.params;
+  await ReviewServices.deleteVendorResponse(responseId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Response deleted successfully",
+  });
+});
+
 export const ReviewController = {
   createReview,
   getReviewByProductId,
@@ -100,4 +110,5 @@ export const ReviewController = {
   deleteReview,
   createVendorResponse,
   updateVendorResponse,
+  deleteVendorResponse,
 };

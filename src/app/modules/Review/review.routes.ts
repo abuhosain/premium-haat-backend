@@ -38,4 +38,11 @@ router.put(
   ReviewController.updateVendorResponse
 );
 
+// delete response
+router.delete(
+  "/response/:responseId",
+  auth(UserRole.VENDOR),
+  ReviewController.deleteVendorResponse
+);
+
 export const ReviewRoutes = router;
