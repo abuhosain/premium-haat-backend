@@ -62,9 +62,26 @@ const deleteReview = catchAsynch(async (req: any, res) => {
   });
 });
 
+const createVendorResponse = catchAsynch(async (req: any, res) => {
+  const { reviewId, description } = req.body;
+  const userId = req.user.id;
+  const result = await ReviewServices.createVendorResponse(
+    reviewId,
+    userId,
+    description
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Response Submited Done",
+    data: result,
+  });
+});
+
 export const ReviewController = {
   createReview,
   getReviewByProductId,
   updateReview,
   deleteReview,
+  createVendorResponse,
 };

@@ -25,4 +25,11 @@ router.delete(
   ReviewController.deleteReview
 );
 
+// create response
+router.post(
+  "/:reviewId/response",
+  auth(UserRole.VENDOR),
+  ReviewController.createVendorResponse
+);
+
 export const ReviewRoutes = router;

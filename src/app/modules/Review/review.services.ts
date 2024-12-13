@@ -1,4 +1,6 @@
+import httpStatus from "http-status";
 import { prisma } from "../../../shared/prisma";
+import ApiError from "../../errors/ApiError";
 
 const createReview = async (
   description: string,
@@ -60,9 +62,63 @@ const deleteReview = async (reviewId: string) => {
   });
 };
 
+const createVendorResponse = async (
+  reviewId: string,
+  userId: string,
+  description: string
+) => {
+  const vendor = await prisma.vendor.findFirst({
+    where: {
+      user: {
+        id: userId,
+      },
+    },
+    select: { id: true },
+  });
+
+  if (!vendor) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Vendor not found");
+  }
+
+  const vendorId = vendor.id;
+
+  // Check if the vendor is the product owner
+  const review = await prisma.review.findUnique({
+    where: { id: reviewId },
+    include: {
+      product: {
+        select: {
+          vendorId: true, // Check if the vendor is the product owner
+        },
+      },
+    },
+  });
+
+  if (!review) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Review not found");
+  }
+
+  if (review.product.vendorId !== vendorId) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "Only the vendor can respond to this review"
+    );
+  }
+
+  // Create the vendor response
+  return await prisma.response.create({
+    data: {
+      reviewId,
+      vendorId,
+      description,
+    },
+  });
+};
+
 export const ReviewServices = {
   createReview,
   getReviewByProductId,
   updateReview,
   deleteReview,
+  createVendorResponse,
 };
