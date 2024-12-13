@@ -22,6 +22,7 @@ model User {
   vendor   Vendor?
   profile  Profile?
   Follow   Follow[]
+  Review   Review[]
 
   @@map("users")
 }
@@ -93,8 +94,22 @@ model Product {
   category Category @relation(fields: [categoryId], references: [id])
   vendor   Vendor   @relation(fields: [vendorId], references: [id])
   coupon   Coupon?  @relation(fields: [couponId], references: [id])
+  review   Review[]
 
   @@map("products")
+}
+
+model Review {
+  id          String @id @default(uuid())
+  description String
+  rating      Int
+  productId   String
+  userId      String
+
+  user   User    @relation(fields: [userId], references: [id])
+  vendor Product @relation(fields: [productId], references: [id])
+
+  @@map("reviews")
 }
 
 model Coupon {
@@ -103,7 +118,7 @@ model Coupon {
   percentage Float
   expiryDate DateTime
   productId  String?
-  Product    Product[]
+  product    Product[]
 
   @@map("coupons")
 }
