@@ -21,7 +21,21 @@ const getReviewByProductId = async (productId: string) => {
     where: {
       productId,
     },
-    include: { user: true },
+    include: {
+      user: {
+        select: {
+          id: true, // Include the user ID
+          email: true, // Include the user's email
+          profile: {
+            select: {
+              firstName: true,
+              lastName: true,
+              img: true,
+            },
+          },
+        },
+      },
+    },
   });
   return result;
 };
