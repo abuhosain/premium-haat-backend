@@ -40,8 +40,15 @@ const updateReview = async (
   });
 };
 
+const deleteReview = async (reviewId: string) => {
+  return await prisma.review.delete({
+    where: { id: reviewId },
+  });
+};
+
 export const ReviewServices = {
   createReview,
   getReviewByProductId,
   updateReview,
+  deleteReview,
 };

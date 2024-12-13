@@ -18,5 +18,11 @@ router.put(
   auth(UserRole.CUSTOMER),
   ReviewController.updateReview
 );
+// delete review
+router.delete(
+  "/:reviewId",
+  auth(UserRole.CUSTOMER),
+  ReviewController.deleteReview
+);
 
 export const ReviewRoutes = router;
