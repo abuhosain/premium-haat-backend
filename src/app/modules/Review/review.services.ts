@@ -26,7 +26,22 @@ const getReviewByProductId = async (productId: string) => {
   return result;
 };
 
+const updateReview = async (
+  reviewId: string,
+  description: string,
+  rating: number
+) => {
+  return await prisma.review.update({
+    where: { id: reviewId },
+    data: {
+      description,
+      rating,
+    },
+  });
+};
+
 export const ReviewServices = {
   createReview,
   getReviewByProductId,
+  updateReview,
 };
