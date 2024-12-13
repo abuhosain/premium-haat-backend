@@ -23,6 +23,16 @@ const followVendor = async (userId: string, vendorId: string) => {
   }
 };
 
+const getFollowersByVendorId = async (vendorId: string) => {
+  const result = await prisma.follow.findMany({
+    where: {
+      vendorId: vendorId,
+    },
+  });
+  return result;
+};
+
 export const FollowServices = {
   followVendor,
+  getFollowersByVendorId,
 };

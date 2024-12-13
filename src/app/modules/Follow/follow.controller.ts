@@ -16,6 +16,18 @@ const followVendor = catchAsynch(async (req: any, res) => {
   });
 });
 
+const getFollowersByVendorId = catchAsynch(async (req, res) => {
+  const vendorId = req.params.vendorId;
+  const result = await FollowServices.getFollowersByVendorId(vendorId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get all followers",
+    data: result,
+  });
+});
+
 export const FollowControllers = {
   followVendor,
+  getFollowersByVendorId,
 };

@@ -10,5 +10,6 @@ router.post(
   auth(UserRole.CUSTOMER),
   FollowControllers.followVendor
 );
+router.get("/vendor/:vendorId", FollowControllers.getFollowersByVendorId);
 
 export const FollowRoutes = router;
