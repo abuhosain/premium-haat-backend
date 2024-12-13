@@ -21,8 +21,8 @@ model User {
   status   UserStatus @default(ACTIVE)
   vendor   Vendor?
   profile  Profile?
-  Follow   Follow[]
-  Review   Review[]
+  follow   Follow[]
+  review   Review[]
 
   @@map("users")
 }
@@ -36,9 +36,10 @@ model Vendor {
   description String
   isBlocked   Boolean @default(false)
 
-  user    User      @relation(fields: [email], references: [email])
-  product Product[]
-  follow  Follow[]
+  user     User       @relation(fields: [email], references: [email])
+  product  Product[]
+  follow   Follow[]
+  response Response[]
 
   @@map("vendors")
 }
@@ -106,10 +107,23 @@ model Review {
   productId   String
   userId      String
 
-  user   User    @relation(fields: [userId], references: [id])
-  vendor Product @relation(fields: [productId], references: [id])
+  user     User       @relation(fields: [userId], references: [id])
+  product  Product    @relation(fields: [productId], references: [id])
+  response Response[]
 
   @@map("reviews")
+}
+
+model Response {
+  id          String @id @default(uuid())
+  reviewId    String
+  vendorId    String
+  description String
+
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id])
+
+  @@map("response")
 }
 
 model Coupon {
