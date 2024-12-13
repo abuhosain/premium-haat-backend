@@ -3,6 +3,8 @@ import { fileUploader } from "../../helpers/fileUploader";
 import { IFile } from "../../interfaces/file";
 import { prisma } from "../../../shared/prisma";
 import { Product } from "@prisma/client";
+import { IPaginationOptions } from "../../interfaces/paginaton";
+import buildPrismaQuery from "../../helpers/Builder";
 
 const createProduct = async (req: Request) => {
   const file = req.file as IFile;
@@ -17,8 +19,17 @@ const createProduct = async (req: Request) => {
   return result;
 };
 
-const getAllProductFromDb = async (): Promise<Product[]> => {
-  return await prisma.product.findMany();
+const getAllProductFromDb = async (
+  options: IPaginationOptions,
+  filters: any
+) => {
+  const result = await buildPrismaQuery({
+    model: "product",
+    filters,
+    pagination: options,
+    include: { vendor: true },
+  });
+  return result;
 };
 
 const getProductById = async (id: string): Promise<Product | null> => {
