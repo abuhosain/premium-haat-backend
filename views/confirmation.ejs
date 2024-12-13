@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* Title */
+        .success-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Logo */
+        .logo {
+            width: 120px;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        /* History title */
+        .history-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        /* Transaction table */
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .transaction-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .transaction-table .label {
+            background-color: #f2f4f7;
+            font-weight: 600;
+            color: #3498db;
+            text-transform: uppercase;
+            border-radius: 6px;
+        }
+
+        /* Button container */
+        .btn-container {
+            margin-top: 40px;
+        }
+
+        /* Go Home button */
+        .home-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .home-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .success-title {
+                font-size: 30px;
+            }
+
+            .history-title {
+                font-size: 24px;
+            }
+
+            .transaction-table td {
+                font-size: 14px;
+            }
+
+            .home-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="success-title">Payment Successful</h1>
+        <img src="https://i.ibb.co.com/HGL464p/victory-zone.png" alt="Logo" class="logo">
+        <h2 class="history-title">Transaction Details</h2>
+        <table class="transaction-table">
+            <tr>
+                <td class="label">Consumer Name:</td>
+                <td><%= consumerName %></td>
+            </tr>
+            <tr>
+                <td class="label">Consumer Email:</td>
+                <td><%= email %></td>
+            </tr>
+            <tr>
+                <td class="label">Phone No:</td>
+                <td><%= phone %></td>
+            </tr>
+            <tr>
+                <td class="label">Transaction ID:</td>
+                <td><%= transactionId %></td>
+            </tr>
+            <tr>
+                <td class="label">Payment Status:</td>
+                <td><%= paymentStatus %></td>
+            </tr>
+            <tr>
+                <td class="label">Total Amount:</td>
+                <td><%= amount %></td>
+            </tr>
+            <tr>
+                <td class="label">Currency:</td>
+                <td><%= currency %></td>
+            </tr>
+            <tr>
+                <td class="label">Payment Type:</td>
+                <td><%= payment_type %></td>
+            </tr>
+            <tr>
+                <td class="label">Pay Time:</td>
+                <td><%= payTime %></td>
+            </tr>
+        </table>
+
+        <div class="btn-container">
+            <a class="home-btn" href="https://recipe-circle-frontend.vercel.app">Go Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

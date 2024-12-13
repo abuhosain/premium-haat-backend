@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import router from "./app/routes";
+import path from "path";
 const app: Application = express();
 
 // midleware
@@ -13,6 +14,13 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from the 'build' directory
+app.use(express.static(path.join(__dirname, "..", "build")));
+
+// Set the views directory for EJS templates
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs"); // Set EJS as the view engine
+
 app.get("/", (req: Request, res: Response) => {
   res.send({
     Message: "HosCare server running...",
@@ -20,6 +28,11 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1", router);
+
+// Catch-all route for client-side routing
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+});
 
 // error handler
 app.use(globalErrorHandler);

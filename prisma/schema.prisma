@@ -136,12 +136,12 @@ model Coupon {
 }
 
 model Order {
-  id         String      @id @default(uuid())
-  userId     String
-  vendorId   String
-  status     OrderStatus @default(PENDING)
-  totalPrice Float
-
+  id            String        @id @default(uuid())
+  userId        String
+  vendorId      String
+  status        OrderStatus   @default(PENDING)
+  totalPrice    Float
+  txId          String        @unique
   paymentStatus PaymentStatus @default(UNPAID)
 
   user   User   @relation(fields: [userId], references: [id])
@@ -166,12 +166,11 @@ model OrderItem {
 }
 
 model Payment {
-  id         String @id @default(uuid())
-  txId       String
-  amount     String
-  orderId    String @unique
-  getWayDate String
-  order      Order  @relation(fields: [orderId], references: [id])
+  id      String @id @default(uuid())
+  txId    String @unique
+  amount  String
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
 
   @@map("payments")
 }

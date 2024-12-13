@@ -6,6 +6,8 @@ import { ProductRoutes } from "../modules/Product/product.routes";
 import { CouponRoutes } from "../modules/Coupon/coupon.routes";
 import { FollowRoutes } from "../modules/Follow/follow.routes";
 import { ReviewRoutes } from "../modules/Review/review.routes";
+import { OrderRoutes } from "../modules/Order/order.routes";
+import { PaymentRoutes } from "../modules/payment/payment.routes";
 
 const router = express.Router();
 
@@ -41,6 +43,14 @@ const moduleRoutes = [
   {
     path: "/response",
     route: ReviewRoutes,
+  },
+  {
+    path: "/order",
+    route: OrderRoutes,
+  },
+  {
+    path: "/payment",
+    route: PaymentRoutes,
   },
 ];
 
