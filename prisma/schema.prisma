@@ -17,6 +17,7 @@ model User {
   profile  Profile?
   follow   Follow[]
   review   Review[]
+  Order    Order[]
 
   @@map("users")
 }
@@ -34,6 +35,7 @@ model Vendor {
   product  Product[]
   follow   Follow[]
   response Response[]
+  Order    Order[]
 
   @@map("vendors")
 }
@@ -87,10 +89,11 @@ model Product {
   createdAt   DateTime @default(now())
 
   // Relation
-  category Category @relation(fields: [categoryId], references: [id])
-  vendor   Vendor   @relation(fields: [vendorId], references: [id])
-  coupon   Coupon?  @relation(fields: [couponId], references: [id])
-  review   Review[]
+  category  Category    @relation(fields: [categoryId], references: [id])
+  vendor    Vendor      @relation(fields: [vendorId], references: [id])
+  coupon    Coupon?     @relation(fields: [couponId], references: [id])
+  review    Review[]
+  orderItem OrderItem[]
 
   @@map("products")
 }
@@ -132,6 +135,47 @@ model Coupon {
   @@map("coupons")
 }
 
+model Order {
+  id         String      @id @default(uuid())
+  userId     String
+  vendorId   String
+  status     OrderStatus @default(PENDING)
+  totalPrice Float
+
+  paymentStatus PaymentStatus @default(UNPAID)
+
+  user   User   @relation(fields: [userId], references: [id])
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+
+  orderItem OrderItem[]
+  payment   Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  productId String
+  orderId   String
+  quantity  String
+
+  product Product @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+
+  @@map("order_items")
+}
+
+model Payment {
+  id         String @id @default(uuid())
+  txId       String
+  amount     String
+  orderId    String @unique
+  getWayDate String
+  order      Order  @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
+
 enum UserRole {
   ADMIN
   CUSTOMER
@@ -142,4 +186,16 @@ enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
 }
