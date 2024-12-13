@@ -11,4 +11,6 @@ router.post(
   ReviewController.createReview
 );
 
+router.get("/:productId", ReviewController.getReviewByProductId);
+
 export const ReviewRoutes = router;

@@ -25,6 +25,18 @@ const createReview = catchAsynch(async (req: any, res) => {
   });
 });
 
+const getReviewByProductId = catchAsynch(async (req: any, res) => {
+  const { productId } = req.params;
+  const result = await ReviewServices.getReviewByProductId(productId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Fetch all reviews",
+    data: result,
+  });
+});
+
 export const ReviewController = {
   createReview,
+  getReviewByProductId,
 };
