@@ -78,10 +78,26 @@ const createVendorResponse = catchAsynch(async (req: any, res) => {
   });
 });
 
+const updateVendorResponse = catchAsynch(async (req: any, res) => {
+  const { description } = req.body;
+  const { responseId } = req.params;
+  const result = await ReviewServices.updateVendorResponse(
+    responseId,
+    description
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Response Updated Done",
+    data: result,
+  });
+});
+
 export const ReviewController = {
   createReview,
   getReviewByProductId,
   updateReview,
   deleteReview,
   createVendorResponse,
+  updateVendorResponse,
 };

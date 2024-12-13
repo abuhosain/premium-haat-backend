@@ -31,5 +31,11 @@ router.post(
   auth(UserRole.VENDOR),
   ReviewController.createVendorResponse
 );
+// update response
+router.put(
+  "/response/:responseId",
+  auth(UserRole.VENDOR),
+  ReviewController.updateVendorResponse
+);
 
 export const ReviewRoutes = router;

@@ -62,6 +62,7 @@ const deleteReview = async (reviewId: string) => {
   });
 };
 
+// create response
 const createVendorResponse = async (
   reviewId: string,
   userId: string,
@@ -115,10 +116,32 @@ const createVendorResponse = async (
   });
 };
 
+// Update Vendor Response to Review
+const updateVendorResponse = async (
+  responseId: string,
+  description: string
+) => {
+  const response = await prisma.response.findUnique({
+    where: { id: responseId },
+  });
+
+  if (!response) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Vendor response not found");
+  }
+
+  return await prisma.response.update({
+    where: { id: responseId },
+    data: {
+      description,
+    },
+  });
+};
+
 export const ReviewServices = {
   createReview,
   getReviewByProductId,
   updateReview,
   deleteReview,
   createVendorResponse,
+  updateVendorResponse,
 };
