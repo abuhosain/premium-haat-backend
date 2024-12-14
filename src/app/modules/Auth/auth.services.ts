@@ -16,6 +16,28 @@ const loginUser = async (payload: { email: string; password: string }) => {
     },
   });
 
+  // Determine which model to use for profile or vendor based on the user's role
+  let userProfile;
+  let name;
+  let img;
+  if (userData.role === "VENDOR") {
+    userProfile = await prisma.vendor.findUniqueOrThrow({
+      where: {
+        email: payload.email,
+      },
+    });
+    name = userProfile?.name;
+    img = userProfile.logo;
+  } else {
+    userProfile = await prisma.profile.findUniqueOrThrow({
+      where: {
+        email: payload.email,
+      },
+    });
+    name = userProfile?.firstName + " " + userProfile?.lastName;
+    img = userProfile.img;
+  }
+
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
     userData.password
@@ -26,13 +48,27 @@ const loginUser = async (payload: { email: string; password: string }) => {
   }
 
   const accessToken = JwtHelpers.generateToken(
-    { email: userData.email, role: userData.role, id: userData.id },
+    {
+      email: userData.email,
+      role: userData.role,
+      id: userData.id,
+      name: name,
+      img: img,
+      phone: userProfile?.phone,
+    },
     config.jwt.jwt_secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = JwtHelpers.generateToken(
-    { email: userData.email, role: userData.role },
+    {
+      email: userData.email,
+      role: userData.role,
+      id: userData.id,
+      name: name,
+      img: img,
+      phone: userProfile?.phone,
+    },
     config.jwt.refresh_token as Secret,
     config.jwt.refresh_token_expires_in as string
   );
