@@ -4,6 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { ProductServices } from "./product.services";
 import { productFilterableFields } from "./product.constance";
 import pick from "../../../shared/pick";
+import { any } from "zod";
 
 const createProduct = catchAsynch(async (req, res) => {
   const result = await ProductServices.createProduct(req);
@@ -38,6 +39,28 @@ const getProductById = catchAsynch(async (req, res) => {
   });
 });
 
+const getProductByVendor = catchAsynch(async (req, res) => {
+  const result = await ProductServices.getProductByVendor(req);
+
+  // Ensure the `result` contains products
+  if (!result || result.length === 0) {
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: "No products found for this vendor",
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Products fetched successfully",
+    data: result, // Include products in the response
+  });
+});
+
+
+
 const updateProduct = catchAsynch(async (req, res) => {
   const { id } = req.params;
   const result = await ProductServices.updateProduct(id, req);
@@ -66,4 +89,5 @@ export const ProductControllers = {
   getProductById,
   updateProduct,
   deleteProduct,
+  getProductByVendor,
 };

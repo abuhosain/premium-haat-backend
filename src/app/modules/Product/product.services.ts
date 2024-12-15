@@ -6,7 +6,17 @@ import { Product } from "@prisma/client";
 import { IPaginationOptions } from "../../interfaces/paginaton";
 import buildPrismaQuery from "../../helpers/Builder";
 
-const createProduct = async (req: Request) => {
+const createProduct = async (req: any) => {
+  const { email } = req?.user;
+  console.log(email);
+  const vendor = await prisma.vendor.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  req.body.vendorId = vendor?.id;
+
   const file = req.file as IFile;
   if (file) {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
@@ -38,6 +48,25 @@ const getProductById = async (id: string): Promise<Product | null> => {
   });
 };
 
+const getProductByVendor = async (req: any) => {
+  const { email } = req.user; 
+   
+  const getVendor = await prisma.vendor.findUnique({
+    where: { email },
+  });
+
+  if (!getVendor) {
+    throw new Error("Vendor not found");
+  }
+
+  // Fetch products associated with the vendor
+  const products = await prisma.product.findMany({
+    where: { vendorId: getVendor.id },
+  });
+
+  return products;
+};
+
 const updateProduct = async (
   id: string,
   req: Request
@@ -67,4 +96,5 @@ export const ProductServices = {
   getProductById,
   updateProduct,
   deleteProductFromDB,
+  getProductByVendor,
 };
