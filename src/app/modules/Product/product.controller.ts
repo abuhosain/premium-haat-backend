@@ -41,21 +41,11 @@ const getProductById = catchAsynch(async (req, res) => {
 
 const getProductByVendor = catchAsynch(async (req, res) => {
   const result = await ProductServices.getProductByVendor(req);
-
-  // Ensure the `result` contains products
-  if (!result || result.length === 0) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "No products found for this vendor",
-    });
-  }
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Products fetched successfully",
-    data: result, // Include products in the response
+    data: result,  
   });
 });
 
