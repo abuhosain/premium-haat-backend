@@ -8,4 +8,6 @@ const router = express.Router();
 
 router.get("/me", auth(UserRole.VENDOR), VendorControllers.getVendor);
 
+router.put("/", auth(UserRole.VENDOR), VendorControllers.updateVendor);
+
 export const VendorRoutes = router;

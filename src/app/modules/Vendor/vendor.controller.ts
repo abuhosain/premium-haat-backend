@@ -9,10 +9,21 @@ const getVendor = catchAsynch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Vendor fetched successfully",
-    data: result,  
+    data: result,
+  });
+});
+
+const updateVendor = catchAsynch(async (req, res) => {
+  const result = await VendorServices.updateVendor(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vendor updated successfully",
+    data: result,
   });
 });
 
 export const VendorControllers = {
   getVendor,
+  updateVendor,
 };
