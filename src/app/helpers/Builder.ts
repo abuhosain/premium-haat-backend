@@ -1,14 +1,15 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { PaginationHelpers } from "./paginationHelpers";
 import { IPaginationOptions } from "../interfaces/paginaton";
+import { PaginationHelpers } from "./paginationHelpers";
+ 
 
 const prisma = new PrismaClient();
 
 interface IQueryBuilderOptions {
   model: keyof PrismaClient;
-  filters: any;
+  filters?: any;
   pagination: IPaginationOptions;
-  include?: Prisma.UserInclude;
+  include?: any;
 }
 
 const buildPrismaQuery = async (options: IQueryBuilderOptions) => {
@@ -16,9 +17,40 @@ const buildPrismaQuery = async (options: IQueryBuilderOptions) => {
   const { limit, page, skip, sortBy, sortOrder } =
     PaginationHelpers.calculatePagination(pagination);
 
-  const andConditions = Object.keys(filters).map((key) => ({
-    [key]: { equals: filters[key] },
-  }));
+  const andConditions: any[] = [];
+
+  // Handle the case where a search term is provided
+  if (filters.searchTerm) {
+    andConditions.push({
+      OR: [
+        { title: { contains: filters.searchTerm, mode: "insensitive" } },
+        { description: { contains: filters.searchTerm, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  // Handle price range filtering for `product` model
+  if (model === "product") {
+    if (filters.minPrice) {
+      andConditions.push({
+        price: { gte: +filters.minPrice },
+      });
+    }
+    if (filters.maxPrice) {
+      andConditions.push({
+        price: { lte: +filters.maxPrice },
+      });
+    }
+  }
+
+  // Map other filters into Prisma's AND conditions
+  Object.keys(filters).forEach((key) => {
+    if (key !== "searchTerm" && key !== "minPrice" && key !== "maxPrice") {
+      andConditions.push({
+        [key]: { equals: filters[key] },
+      });
+    }
+  });
 
   const whereConditions =
     andConditions.length > 0 ? { AND: andConditions } : {};
@@ -35,9 +67,36 @@ const buildPrismaQuery = async (options: IQueryBuilderOptions) => {
   const total = await (prisma[model] as any).count({ where: whereConditions });
   const totalPages = Math.ceil(total / limit);
 
+  let computedResults = result;
+
+  // Only compute avgRating and totalSale if the model is `product`
+  if (model === "product") {
+    computedResults = result.map((item: any) => {
+      const avgRating =
+        item.review?.length > 0
+          ? item.review.reduce((sum: number, rev: any) => sum + rev.rating, 0) /
+            item.review.length
+          : 0;
+
+      const totalSale =
+        item.orderItem?.length > 0
+          ? item.orderItem.reduce(
+              (sum: number, order: any) => sum + order.quantity,
+              0
+            )
+          : 0;
+
+      return {
+        ...item,
+        avgRating,
+        totalSale,
+      };
+    });
+  }
+
   return {
     meta: { total, totalPages, page, limit },
-    data: result,
+    data: computedResults,
   };
 };
 

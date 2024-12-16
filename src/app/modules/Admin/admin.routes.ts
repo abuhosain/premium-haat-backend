@@ -14,6 +14,19 @@ router.get("/vendor", auth(UserRole.ADMIN), AdminControllers.getAllVendor);
 // Get all non-deleted users
 router.get("/order", auth(UserRole.ADMIN), AdminControllers.getAllOrder);
 
+// Block a vendor
+router.put(
+  "/block/vendor/:vendorId",
+  auth(UserRole.ADMIN),
+  AdminControllers.blockVendor
+);
+
+// Unblock a user
+router.put(
+  "/unblock/vendor/:vendorId",
+  auth(UserRole.ADMIN),
+  AdminControllers.unblockVendor
+);
 // Block a user
 router.put("/block/:userId", auth(UserRole.ADMIN), AdminControllers.blockUser);
 
