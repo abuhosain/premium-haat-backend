@@ -13,7 +13,6 @@ model User {
   password  String
   role      UserRole
   status    UserStatus @default(ACTIVE)
-  isDeleted Boolean    @default(false)
   vendor    Vendor?
   profile   Profile?
   follow    Follow[]
