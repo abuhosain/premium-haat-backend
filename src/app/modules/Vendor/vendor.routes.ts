@@ -8,6 +8,17 @@ const router = express.Router();
 
 router.get("/me", auth(UserRole.VENDOR), VendorControllers.getVendor);
 
-router.put("/", auth(UserRole.VENDOR), VendorControllers.updateVendor);
+// Update product
+router.put(
+  "/update",
+  fileUploader.upload.single("file"),
+  auth(UserRole.VENDOR),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    }
+    return VendorControllers.updateVendor(req, res, next);
+  }
+);
 
 export const VendorRoutes = router;
