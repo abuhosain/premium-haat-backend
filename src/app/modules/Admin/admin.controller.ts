@@ -14,6 +14,51 @@ const getAllNonDeletedUsers = catchAsynch(async (req, res) => {
   });
 });
 
+const getAllVendor = catchAsynch(async (req, res) => {
+  const result = await AdminServices.getAllVendor();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vendor fetched successfully",
+    data: result,
+  });
+});
+
+// Get all  order
+const getAllOrder = catchAsynch(async (req, res) => {
+  const result = await AdminServices.getAllOrder();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order fetched successfully",
+    data: result,
+  });
+});
+
+// Block a user
+const blockVendor = catchAsynch(async (req, res) => {
+  const { vendorId } = req.params;
+  const result = await AdminServices.blockVendor(vendorId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vendor blocked successfully",
+    data: result,
+  });
+});
+
+// Unblock a user
+const unblockVendor = catchAsynch(async (req, res) => {
+  const { vendorId } = req.params;
+  const result = await AdminServices.unblockVendor(vendorId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vendor unblocked successfully",
+    data: result,
+  });
+});
+
 // Block a user
 const blockUser = catchAsynch(async (req, res) => {
   const { userId } = req.params;
@@ -55,4 +100,8 @@ export const AdminControllers = {
   blockUser,
   unblockUser,
   deleteUser,
+  getAllOrder,
+  getAllVendor,
+  blockVendor,
+  unblockVendor,
 };

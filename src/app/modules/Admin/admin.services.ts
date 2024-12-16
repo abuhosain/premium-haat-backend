@@ -1,7 +1,6 @@
-import { User } from "@prisma/client";
+import { User, Vendor } from "@prisma/client";
 import { prisma } from "../../../shared/prisma";
 
-// Get all non-deleted users (ACTIVE or BLOCKED)
 const getAllNonDeletedUsersFromDB = async (): Promise<User[]> => {
   return await prisma.user.findMany({
     where: {
@@ -9,6 +8,35 @@ const getAllNonDeletedUsersFromDB = async (): Promise<User[]> => {
         in: ["ACTIVE", "BLOCKED"],
       },
     },
+  });
+};
+
+const getAllVendor = async (): Promise<Vendor[]> => {
+  return await prisma.vendor.findMany();
+};
+
+const getAllOrder = async () => {
+  return await prisma.order.findMany({
+    include: {
+      user: true,
+      vendor: true,
+    },
+  });
+};
+
+// Block a vendor (set isBlocked to true)
+const blockVendor = async (vendorId: string): Promise<Vendor | null> => {
+  return await prisma.vendor.update({
+    where: { id: vendorId },
+    data: { isBlocked: true },
+  });
+};
+
+// Unblock a vendor (set isBlocked to false)
+const unblockVendor = async (vendorId: string): Promise<Vendor | null> => {
+  return await prisma.vendor.update({
+    where: { id: vendorId },
+    data: { isBlocked: false },
   });
 };
 
@@ -41,4 +69,8 @@ export const AdminServices = {
   blockUser,
   unblockUser,
   deleteUser,
+  getAllOrder,
+  getAllVendor,
+  blockVendor,
+  unblockVendor,
 };

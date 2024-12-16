@@ -8,12 +8,14 @@ const router = express.Router();
 // Get all non-deleted users
 router.get("/", auth(UserRole.ADMIN), AdminControllers.getAllNonDeletedUsers);
 
+// Get all vendor
+router.get("/vendor", auth(UserRole.ADMIN), AdminControllers.getAllVendor);
+
+// Get all non-deleted users
+router.get("/order", auth(UserRole.ADMIN), AdminControllers.getAllOrder);
+
 // Block a user
-router.put(
-  "/block/:userId",
-  auth(UserRole.ADMIN),
-  AdminControllers.blockUser
-);
+router.put("/block/:userId", auth(UserRole.ADMIN), AdminControllers.blockUser);
 
 // Unblock a user
 router.put(
@@ -23,6 +25,10 @@ router.put(
 );
 
 // Delete a user
-router.delete("/:userId", auth(UserRole.ADMIN), AdminControllers.deleteUser);
+router.delete(
+  "/user/:userId",
+  auth(UserRole.ADMIN),
+  AdminControllers.deleteUser
+);
 
 export const AdminRoutes = router;
