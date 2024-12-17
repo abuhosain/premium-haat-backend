@@ -3,6 +3,7 @@ import { fileUploader } from "../../helpers/fileUploader";
 import { UserRole } from "@prisma/client";
 import auth from "../../middlewares/auth";
 import { VendorControllers } from "./vendor.controller";
+import { multerUpload } from "../../config/multer.config";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get("/me", auth(UserRole.VENDOR), VendorControllers.getVendor);
 // Update product
 router.put(
   "/update",
-  fileUploader.upload.single("file"),
+  multerUpload.single('file'),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {

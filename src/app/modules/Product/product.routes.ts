@@ -4,12 +4,13 @@ import { UserRole } from "@prisma/client";
 import auth from "../../middlewares/auth";
 import { ProductValidation } from "./product.validaiton";
 import { ProductControllers } from "./product.controller";
+import { multerUpload } from "../../config/multer.config";
 
 const router = express.Router();
 
 router.post(
   "/create-product",
-  fileUploader.upload.single("file"),
+  multerUpload.single('file'),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = ProductValidation.createProduct.parse(JSON.parse(req.body.data));
@@ -32,7 +33,7 @@ router.get(
 // Update product
 router.put(
   "/:id",
-  fileUploader.upload.single("file"),
+  multerUpload.single('file'),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {

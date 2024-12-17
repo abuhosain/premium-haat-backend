@@ -7,10 +7,8 @@ import { IFile } from "../../interfaces/file";
 const createCategory = async (req: Request) => {
   const file = req.file as IFile;
   if (file) {
-    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    req.body.icon = uploadToCloudinary?.secure_url;
+    req.body.icon = file.path;
   }
-
   const result = await prisma.category.create({
     data: req.body,
   });
@@ -33,8 +31,7 @@ const updateCategory = async (
 ): Promise<Category | null> => {
   const file = req.file as IFile;
   if (file) {
-    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    req.body.icon = uploadToCloudinary?.secure_url;
+    req.body.icon = file.path;
   }
 
   const result = await prisma.category.update({

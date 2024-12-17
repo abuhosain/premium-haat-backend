@@ -4,12 +4,13 @@ import { UserRole } from "@prisma/client";
 import { CategoryControllers } from "./category.controller";
 import { fileUploader } from "../../helpers/fileUploader";
 import { CategoryValidation } from "./category.validtion";
+import { multerUpload } from "../../config/multer.config";
 
 const router = express.Router();
 
 router.post(
   "/create-category",
-  fileUploader.upload.single("file"),
+  multerUpload.single('file'),
   auth(UserRole.ADMIN),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = CategoryValidation.createCategory.parse(
@@ -26,7 +27,7 @@ router.get("/:id", CategoryControllers.getCategoryById);
 // Update category
 router.put(
   "/:id",
-  fileUploader.upload.single("file"),
+  multerUpload.single('file'),
   auth(UserRole.ADMIN),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {

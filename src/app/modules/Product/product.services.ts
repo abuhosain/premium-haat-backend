@@ -19,8 +19,7 @@ const createProduct = async (req: any) => {
 
   const file = req.file as IFile;
   if (file) {
-    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    req.body.img = uploadToCloudinary?.secure_url;
+    req.body.img = file.path;
   }
 
   const result = await prisma.product.create({
@@ -49,8 +48,8 @@ const getProductById = async (id: string): Promise<Product | null> => {
 };
 
 const getProductByVendor = async (req: any) => {
-  const { email } = req.user; 
-   
+  const { email } = req.user;
+
   const getVendor = await prisma.vendor.findUnique({
     where: { email },
   });
@@ -73,10 +72,8 @@ const updateProduct = async (
 ): Promise<Product | null> => {
   const file = req.file as IFile;
   if (file) {
-    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    req.body.img = uploadToCloudinary?.secure_url;
+    req.body.img = file.path;
   }
-
   const result = await prisma.product.update({
     where: { id },
     data: req.body,

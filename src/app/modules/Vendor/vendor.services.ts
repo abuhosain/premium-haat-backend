@@ -23,13 +23,9 @@ const updateVendor = async (req: any): Promise<Vendor> => {
   const getVendor = await prisma.vendor.findUnique({
     where: { email: email },
   });
-  console.log(req.body)
-  // console.log(getVendor);
-  const file = req?.file as IFile;
-  // If a file is uploaded, upload to Cloudinary and update the logo
+  const file = req.file as IFile;
   if (file) {
-    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-    req.body.logo = uploadToCloudinary?.secure_url;
+    req.body.logo = file.path;
   }
 
   const result = await prisma.vendor.update({
