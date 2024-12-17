@@ -18,6 +18,7 @@ const buildPrismaQuery = async (options: IQueryBuilderOptions) => {
     PaginationHelpers.calculatePagination(pagination);
 
   const andConditions: any[] = [];
+  console.log("fileter",filters)
 
   // Handle the case where a search term is provided
   if (filters.searchTerm) {

@@ -10,6 +10,7 @@ const createOrder = async (
   user: JwtPayload,
   payload: {
     vendorId: string;
+    totalPrice : number;
     orderItems: { productId: string; quantity: number; price: number }[];
   }
 ) => {
@@ -31,10 +32,10 @@ const createOrder = async (
     throw new ApiError(httpStatus.NOT_FOUND, "Vendor not found");
   }
 
-  const totalPrice = payload.orderItems.reduce(
-    (sum, item) => sum + item.quantity * item.price,
-    0
-  );
+  // const totalPrice = payload?.orderItems?.reduce(
+  //   (sum, item) => sum + item.quantity * item.price,
+  //   0
+  // );
 
   // Generate a unique transaction ID
   const transactionId = `TXN-${Date.now()}`;
@@ -44,13 +45,13 @@ const createOrder = async (
     data: {
       userId: user?.id,
       vendorId: payload.vendorId,
-      totalPrice: totalPrice,
+      totalPrice: payload.totalPrice,
       txId: transactionId,
     },
   });
 
   // Create the order items
-  const orderItemsData = payload.orderItems.map((item) => ({
+  const orderItemsData = payload?.orderItems?.map((item) => ({
     productId: item.productId,
     orderId: order.id,
     quantity: item.quantity.toString(),
@@ -63,7 +64,7 @@ const createOrder = async (
   // Prepare payment data
   const paymentData = {
     transactionId,
-    amount: totalPrice,
+    amount: payload.totalPrice,
     customerName: isUser.firstName + " " + isUser.lastName,
     customerEmail: isUser.email,
     customerPhone: isUser.phone || "Unknown",

@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post(
   "/create-product",
-  multerUpload.single('file'),
+  multerUpload.single("file"),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = ProductValidation.createProduct.parse(JSON.parse(req.body.data));
@@ -33,7 +33,7 @@ router.get(
 // Update product
 router.put(
   "/:id",
-  multerUpload.single('file'),
+  multerUpload.single("file"),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
@@ -47,5 +47,8 @@ router.put(
 
 // delete product
 router.delete("/:id", ProductControllers.deleteProduct);
+
+// POST /api/products/multiple
+router.post("/multiple", ProductControllers.fetchMultipleProducts);
 
 export const ProductRoutes = router;

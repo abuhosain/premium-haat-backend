@@ -32,6 +32,7 @@ const getAllProductFromDb = async (
   options: IPaginationOptions,
   filters: any
 ) => {
+  console.log("filter from services", filters)
   const result = await buildPrismaQuery({
     model: "product",
     filters,
@@ -44,6 +45,31 @@ const getAllProductFromDb = async (
 const getProductById = async (id: string): Promise<Product | null> => {
   return await prisma.product.findUnique({
     where: { id },
+    include: {
+      category: true,
+      vendor: true,
+      coupon: true,
+      review: true,
+    },
+  });
+};
+
+const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
+  if (!ids || ids.length === 0) {
+    throw new Error("No product IDs provided");
+  }
+  return await prisma.product.findMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+    include: {
+      category: true,
+      vendor: true,
+      coupon: true,
+      review: true,
+    },
   });
 };
 
@@ -94,4 +120,5 @@ export const ProductServices = {
   updateProduct,
   deleteProductFromDB,
   getProductByVendor,
+  getProductsByIds,
 };
