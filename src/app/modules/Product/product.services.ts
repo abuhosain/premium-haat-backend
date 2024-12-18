@@ -32,7 +32,7 @@ const getAllProductFromDb = async (
   options: IPaginationOptions,
   filters: any
 ) => {
-  console.log("filter from services", filters)
+  // console.log("filter from services", filters)
   const result = await buildPrismaQuery({
     model: "product",
     filters,

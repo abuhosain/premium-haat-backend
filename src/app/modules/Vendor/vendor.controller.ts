@@ -13,6 +13,30 @@ const getVendor = catchAsynch(async (req, res) => {
   });
 });
 
+const getVendorById = catchAsynch(async (req, res) => {
+  const { id } = req.params;  
+  const result = await VendorServices.getVendorById(id);  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vendor fetched successfully",
+    data: result,
+  });
+});
+
+const getProductsByVendorId = catchAsynch(async (req, res) => {
+  const { vendorId } = req.params;  
+  const result = await VendorServices.getProductsByVendorId(vendorId);  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Products fetched successfully",
+    data: result,
+  });
+});
+
+
+
 const updateVendor = catchAsynch(async (req, res) => {
   const result = await VendorServices.updateVendor(req);
   sendResponse(res, {
@@ -26,4 +50,6 @@ const updateVendor = catchAsynch(async (req, res) => {
 export const VendorControllers = {
   getVendor,
   updateVendor,
+  getVendorById,
+  getProductsByVendorId
 };

@@ -6,14 +6,15 @@ import ApiError from "../../errors/ApiError";
 
 const prisma = new PrismaClient();
 
-const createOrder = async (
-  user: JwtPayload,
-  payload: {
-    vendorId: string;
-    totalPrice : number;
-    orderItems: { productId: string; quantity: number; price: number }[];
+const createOrder = async (user: JwtPayload, payload: any) => {
+  if (!user || !user.email) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid user");
   }
-) => {
+
+  if (!payload || !payload.vendorId || !Array.isArray(payload.orderItems)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid payload");
+  }
+
   // Validate the user
   const isUser = await prisma.profile.findUnique({
     where: { email: user.email },
@@ -32,11 +33,6 @@ const createOrder = async (
     throw new ApiError(httpStatus.NOT_FOUND, "Vendor not found");
   }
 
-  // const totalPrice = payload?.orderItems?.reduce(
-  //   (sum, item) => sum + item.quantity * item.price,
-  //   0
-  // );
-
   // Generate a unique transaction ID
   const transactionId = `TXN-${Date.now()}`;
 
@@ -51,28 +47,62 @@ const createOrder = async (
   });
 
   // Create the order items
-  const orderItemsData = payload?.orderItems?.map((item) => ({
+  const orderItemsData = payload.orderItems.map((item: any) => ({
+
     productId: item.productId,
     orderId: order.id,
     quantity: item.quantity.toString(),
   }));
 
+  if (!orderItemsData.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No order items provided");
+  }
+
   await prisma.orderItem.createMany({
     data: orderItemsData,
   });
+
+  // Decrease product quantities
+  for (const item of payload.orderItems) {
+    const product = await prisma.product.findUnique({
+      where: { id: item.productId },
+    });
+
+    if (!product) {
+      throw new ApiError(httpStatus.NOT_FOUND, `Product not found: ${item.productId}`);
+    }
+
+    if (product.quantity < item.quantity) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        `Insufficient stock for product: ${product.title}`
+      );
+    }
+
+    await prisma.product.update({
+      where: { id: item.productId },
+      data: {
+        quantity: product.quantity - item.quantity,
+      },
+    });
+  }
 
   // Prepare payment data
   const paymentData = {
     transactionId,
     amount: payload.totalPrice,
-    customerName: isUser.firstName + " " + isUser.lastName,
+    customerName: `${isUser.firstName} ${isUser.lastName}`,
     customerEmail: isUser.email,
     customerPhone: isUser.phone || "Unknown",
     customerAddress: "Bogura, Bangladesh",
   };
 
+  // Log payment data for debugging
+  console.log("Payment Data:", paymentData);
+
   // Initiate the payment
   const paymentSession = await initiatePayment(paymentData);
+
   return paymentSession;
 };
 

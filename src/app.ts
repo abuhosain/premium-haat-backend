@@ -14,7 +14,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigins = "http://localhost:3000"; // Production frontend
+const allowedOrigins = [
+  "http://localhost:3000",
+  " https://premium-haat-frontend.vercel.app",
+]; // Production frontend
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 // Serve static files from the 'build' directory

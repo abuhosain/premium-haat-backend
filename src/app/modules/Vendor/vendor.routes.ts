@@ -9,10 +9,13 @@ const router = express.Router();
 
 router.get("/me", auth(UserRole.VENDOR), VendorControllers.getVendor);
 
+router.get("/vendor/:id", VendorControllers.getVendorById);
+router.get("/product/:vendorId", VendorControllers.getProductsByVendorId);
+
 // Update product
 router.put(
   "/update",
-  multerUpload.single('file'),
+  multerUpload.single("file"),
   auth(UserRole.VENDOR),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {

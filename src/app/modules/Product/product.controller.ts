@@ -16,7 +16,7 @@ const createProduct = catchAsynch(async (req, res) => {
 });
 
 const getAllProduct = catchAsynch(async (req, res) => {
-  console.log(req.query)
+  // console.log(req.query)
   const filters = pick(req.query, productFilterableFields);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder",]);
   const result = await ProductServices.getAllProductFromDb(options, filters);
